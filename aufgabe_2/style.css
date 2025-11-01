@@ -1,0 +1,19 @@
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+canvas {
+  display: block;
+}
+
+
+/* Slider-Position */
+.slider {
+  position: absolute;
+  left: 50%;
+  bottom: 40px;        /* Abstand vom unteren Rand */
+  transform: translateX(-50%);
+  width: 300px;        /* optional: Breite anpassen */
+  
+}
