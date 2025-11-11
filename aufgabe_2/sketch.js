@@ -1,52 +1,72 @@
-let maxDiameter = 800; // maximaler Durchmesser
-let minDiameter = 20;  // minimaler Durchmesser
-let val = 0;           // Wert, der den Slider ersetzt
-let speed = .8;         // Geschwindigkeit der Bewegung
-let direction = 1;     // 1 = aufwärts, -1 = abwärts
+// 🌈 Freie Kreise, die Mausnähe meiden & farbig reagieren
+// 100% p5.js – reine Kreise, keine externen Funktionen
+
+let circles = [];
+let numCircles = 70;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
   noStroke();
+
+  // viele Kreise zufällig im Canvas verteilen
+  for (let i = 0; i < numCircles; i++) {
+    circles.push({
+      x: random(width),
+      y: random(height),
+      r: random(6, 14),
+      vx: random(-1.5, 1.5),
+      vy: random(-1.5, 1.5),
+      baseColor: color(80, 200, 255), // Grundfarbe (bläulich)
+      intensity: 0 // wird bei Mausnähe erhöht
+    });
+  }
 }
 
 function draw() {
-  background(255); // Hintergrund löschen
+  background(15);
 
-  // val automatisch hin und her bewegen
-  val += speed * direction;
+  for (let c of circles) {
+    // --- autonome Bewegung ---
+    c.x += c.vx;
+    c.y += c.vy;
 
-  // Wenn die Grenzen erreicht sind, Richtung umkehren
-  if (val >= 100 || val <= 0) {
-    direction *= -1;
+    // leichtes Driften (Zufallsänderung der Richtung)
+    c.vx += random(-0.05, 0.05);
+    c.vy += random(-0.05, 0.05);
+
+    // Ränder abprallen
+    if (c.x < c.r || c.x > width - c.r) c.vx *= -1;
+    if (c.y < c.r || c.y > height - c.r) c.vy *= -1;
+
+    // --- Mausreaktion ---
+    let d = dist(mouseX, mouseY, c.x, c.y);
+    let safeDistance = 100;
+
+    if (d < safeDistance) {
+      // flieht von der Maus weg
+      let angle = atan2(c.y - mouseY, c.x - mouseX);
+      let force = map(d, 0, safeDistance, 4, 0);
+      c.vx += cos(angle) * force * 0.3;
+      c.vy += sin(angle) * force * 0.3;
+
+      // Farbstärke abhängig von Nähe
+      c.intensity = map(d, 0, safeDistance, 1, 0);
+    } else {
+      // langsam wieder beruhigen
+      c.intensity = lerp(c.intensity, 0, 0.05);
+    }
+
+    // Bewegung bremsen (Reibung)
+    c.vx *= 0.98;
+    c.vy *= 0.98;
+
+    // --- Farbe berechnen ---
+    let nearCol = color(255, 80, 150); // leuchtendes Pink bei Nähe
+    let col = lerpColor(c.baseColor, nearCol, c.intensity);
+    fill(col);
+
+    // Kreis zeichnen
+    circle(c.x, c.y, c.r * 2);
   }
 
-  // Farben
-  let dark = color(86, 60, 92);
-  let light = color(242, 189, 205);
-
-  // Hintergrundhälften
-  fill(dark);
-  rect(0, 0, width / 2, height);
-
-  fill(light);
-  rect(width / 2, 0, width / 2, height);
-
-  // Durchmesser gegensinnig verändern
-  let leftDiameter = map(val, 0, 100, maxDiameter, minDiameter);
-  let rightDiameter = map(val, 0, 100, minDiameter, maxDiameter);
-
-  let midX = width / 2;
-  let centerY = height / 2;
-
-  // Sicherstellen, dass die Kreise im Bereich bleiben
-  let leftX = max(leftDiameter / 2, midX - leftDiameter / 2);
-  let rightX = min(width - rightDiameter / 2, midX + rightDiameter / 2);
-
-  // Linker Kreis
-  fill(light);
-  ellipse(leftX, centerY, leftDiameter, leftDiameter);
-
-  // Rechter Kreis
-  fill(dark);
-  ellipse(rightX, centerY, rightDiameter, rightDiameter);
 }
