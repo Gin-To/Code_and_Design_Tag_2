@@ -16,23 +16,23 @@ function setup() {
       r: circleRadius,
       vx: random(-3, 3),   // etwas stärkere Anfangsgeschwindigkeit
       vy: random(-3, 3),
-      baseColor: color(80, 200, 255), // Grundfarbe (bläulich)
+      baseColor: color(237, 235, 221), // Grundfarbe (beige)
       intensity: 0 // Farbstärke bei Mausnähe
     });
   }
 }
 
 function draw() {
-  background(15);
+  background(99, 0, 0);
 
   for (let c of circles) {
     // --- autonome Bewegung ---
     c.x += c.vx;
     c.y += c.vy;
 
-    // stärkere Drift, damit Bewegung „grösser“ wirkt
-    c.vx += random(-0.08, 0.08);
-    c.vy += random(-0.08, 0.08);
+    // schnelle Bewegung der Kreise
+    c.vx += random(-0.3, 0.3);
+    c.vy += random(-0.3, 0.3);
 
     // Ränder abprallen lassen (mit puffern durch r)
     if (c.x < c.r) {
@@ -70,12 +70,12 @@ function draw() {
       c.intensity = lerp(c.intensity, 0, 0.05);
     }
 
-    // Reibung (leicht weniger Reibung => grössere Bewegungen)
+     // Reibung (leicht weniger Reibung => grössere Bewegungen)
     c.vx *= 0.985;
     c.vy *= 0.985;
 
     // --- Farbe berechnen ---
-    let nearCol = color(255, 80, 150); // pink bei Nähe
+    let nearCol = color(120, 1, 0); // rot bei Nähe
     let col = lerpColor(c.baseColor, nearCol, c.intensity);
     fill(col);
 
