@@ -61,7 +61,7 @@ function draw() {
   scale(-1, 1);
 
   //Zeige das Video (optional)
-  image(video, 0, 0, video.width * ratio, video.height * ratio);
+  //image(video, 0, 0, video.width * ratio, video.height * ratio);
   
   // Zeichne nur, wenn das Modell bereit ist und Hände erkannt wurden
   if (isModelReady) {
