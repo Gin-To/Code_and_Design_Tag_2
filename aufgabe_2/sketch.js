@@ -26,7 +26,7 @@ function draw() {
   background(99, 0, 0);
 
 
-//Für jeden Kreis im Array circles diesen Code ausführen
+  //Für jeden Kreis im Array circles diesen Code ausführen
   for (let c of circles) {
     // --- autonome Bewegung ---
     //Position = Position + Geschwindigkeit (c.x = c.x + c.vx)
@@ -40,19 +40,19 @@ function draw() {
     // Ränder abprallen lassen (mit puffern durch r)
     // die Mitte des Kreises niemals näher als r am Rand sein.
     if (c.x < c.r) { //Ist der Kreis über den linken Rand hinausgeraten?
-      c.x = c.r; // Zurück auf die Wand setzen.
+      c.x = c.r; // Zurück auf die Canvas setzen.
       c.vx *= -1; // Geschwindigkeit umdrehen = Abprallen!
     }
     if (c.x > width - c.r) { //rechter Rand
-      c.x = width - c.r; // Zurück auf die Wand setzen.
+      c.x = width - c.r; // Zurück auf die Canvas setzen.
       c.vx *= -1; // Geschwindigkeit umdrehen = Abprallen!
     }
     if (c.y < c.r) { //oberer Rand
-      c.y = c.r; // Zurück auf die Wand setzen.
+      c.y = c.r; // Zurück auf die Canvas setzen.
       c.vy *= -1; // Geschwindigkeit umdrehen = Abprallen!
     }
     if (c.y > height - c.r) { //unterer Rand
-      c.y = height - c.r; // Zurück auf die Wand setzen.
+      c.y = height - c.r; // Zurück auf die Canvas setzen.
       c.vy *= -1; // Geschwindigkeit umdrehen = Abprallen!
     }
 
@@ -66,7 +66,7 @@ function draw() {
       // je näher, desto stärker flüchtet der Kreis
       let force = map(d, 0, safeDistance, 4, 0);
       c.vx += cos(angle) * force * 0.35; // Kreis erhält einen Schub
-      c.vy += sin(angle) * force * 0.35; 
+      c.vy += sin(angle) * force * 0.35;
       // Farbstärke abhängig von Nähe (0..1)
       c.intensity = map(d, 0, safeDistance, 1, 0);
     } else {
@@ -74,7 +74,7 @@ function draw() {
       c.intensity = lerp(c.intensity, 0, 0.05);
     }
 
-     // Reibung (leicht weniger Reibung => grössere Bewegungen) geschwindigkeit mal 0.985
+    // Reibung (leicht weniger Reibung => grössere Bewegungen) geschwindigkeit mal 0.985
     c.vx *= 0.985;
     c.vy *= 0.985;
 
